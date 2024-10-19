@@ -1,0 +1,24 @@
+from pymongo import MongoClient
+
+def fetch_intruders_from_mongodb():
+    # MongoDB connection URL
+    mongo_url = "mongodb://localhost:27017/intern"  # Use your MongoDB connection URL
+    client = MongoClient(mongo_url)
+
+    # Connect to the database and collection
+    db = client['intruder_db']
+    intruders_collection = db['intruders']
+
+    # Find all documents in the collection
+    intruders = intruders_collection.find()
+
+    # Print the data
+    for intruder in intruders:
+        print(f"Tracker ID: {intruder['tracker_id']}")
+        print(f"Detection Time: {intruder['time']}")
+        print(f"Frame: {intruder['frame']}")
+        print(f"Web Image Path: {intruder['web_image_path']}")
+        print("-" * 40)  # Divider between records
+
+if __name__ == "__main__":
+    fetch_intruders_from_mongodb()
