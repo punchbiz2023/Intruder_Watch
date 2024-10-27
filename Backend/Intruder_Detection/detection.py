@@ -66,6 +66,10 @@ class PersonDetection:
         cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 640)
         frame_count = 0
 
+        # Ensure the directory exists
+        uploads_dir = "C:/Users/k.sakthi adhavan/Jenesha_code/Intruder_Detection/Backend/uploads"
+        os.makedirs(uploads_dir, exist_ok=True)
+
         try:
             while True:
                 ret, img = cap.read()
@@ -84,8 +88,8 @@ class PersonDetection:
                             # First time detecting this intruder, log time, frame, and image path
                             detection_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
                             # Save image path for CSV and web
-                            local_image_path = f"/home/jenesha/Intruder_Watch-master/Backend/uploads/intruder{track_id}.png"
-                            web_image_path = f"http://127.0.0.1:8000/uploads/intruder{track_id}.png"
+                            local_image_path = os.path.join(uploads_dir, f"intruder_{track_id}_{detection_time.replace(':', '-').replace(' ', '_')}.png")
+                            web_image_path = f"http://127.0.0.1:8000/uploads/intruder_{track_id}_{detection_time.replace(':', '-').replace(' ', '_')}.png"
                             self.intruder_detection_times[track_id] = {
                                 'time': detection_time,
                                 'frame': frame_count,
@@ -96,7 +100,10 @@ class PersonDetection:
 
                         # Save the image of the intruder
                         intruImg = img[int(xyxy[1]-25):int(xyxy[3]), int(xyxy[0]):int(xyxy[2])]
-                        cv2.imwrite(self.intruder_detection_times[track_id]['image_path'], intruImg)
+                        if cv2.imwrite(self.intruder_detection_times[track_id]['image_path'], intruImg):
+                            print(f"Saved image for intruder {track_id} at {self.intruder_detection_times[track_id]['image_path']}")
+                        else:
+                            print(f"Failed to save image for intruder {track_id}")
 
                 cv2.imshow('Intruder Detection', img)
                 frame_count += 1
@@ -110,7 +117,6 @@ class PersonDetection:
 
         # Save detection times to MongoDB
         self.save_detection_times_to_mongodb()
-
     def save_detection_times_to_mongodb(self):
         # Prepare to insert records into MongoDB
         for track_id, data in self.intruder_detection_times.items():

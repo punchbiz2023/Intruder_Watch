@@ -1,18 +1,17 @@
+// App.tsx
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, ActivityIndicator, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import LoginScreen from '@/Pages/LoginSignUp/LoginSignUp';
-import Dashboard from '@/Pages/DashBoard/DashBoard';
-import NewProject from '@/Pages/NewProject/NewProject';
-import NavBar from '@/Components/NavBar/NavBar';
-import { VideoProvider } from './Context/videoProvider';
-import videoProcess from './Pages/videoProcess/videoProcess';
-import { RootStackParamList } from './Pages/types';
-
-import WatchPage from './Pages/WatchPage/WatchPage';
-
+import LoginScreen from '@/Pages/LoginSignUp/LoginSignUp'; // Adjust the path as needed
+import Dashboard from '@/Pages/DashBoard/DashBoard'; // Adjust the path as needed
+import NewProject from '@/Pages/NewProject/NewProject'; // Adjust the path as needed
+import NavBar from '@/Components/NavBar/NavBar'; // Adjust the path as needed
+import { VideoProvider } from './Context/videoProvider'; // Adjust the path as needed
+import videoProcess from './Pages/videoProcess/videoProcess'; // Adjust the path as needed
+import { RootStackParamList } from './Pages/types'; // Adjust the path as needed
+import WatchPage from './Pages/WatchPage/WatchPage'; // Adjust the path as needed
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -53,21 +52,23 @@ const App = () => {
   return (
     <VideoProvider>
       <NavigationContainer>
-        <View style={styles.nav}>
-          {isLoggedIn ? <NavBar /> : null}
-        </View>
-        <Stack.Navigator>
-          {isLoggedIn ? (
-            <Stack.Screen name="Dashboard" component={Dashboard} />
-          ) : (
-            <Stack.Screen name="Login">
-              {(props) => <LoginScreen {...props} onLoginSuccess={handleLoginSuccess} />}
-            </Stack.Screen>
-          )}
-          <Stack.Screen name="NewProject" component={NewProject} />
-          <Stack.Screen name="videoProcess" component={videoProcess} />
-          <Stack.Screen name="WatchPage" component={WatchPage} />
-        </Stack.Navigator>
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+          <View style={styles.nav}>
+            {isLoggedIn ? <NavBar /> : null}
+          </View>
+          <Stack.Navigator>
+            {isLoggedIn ? (
+              <Stack.Screen name="Dashboard" component={Dashboard} />
+            ) : (
+              <Stack.Screen name="Login">
+                {(props) => <LoginScreen {...props} onLoginSuccess={handleLoginSuccess} />}
+              </Stack.Screen>
+            )}
+            <Stack.Screen name="NewProject" component={NewProject} />
+            <Stack.Screen name="videoProcess" component={videoProcess} />
+            <Stack.Screen name="WatchPage" component={WatchPage} />
+          </Stack.Navigator>
+        </ScrollView>
       </NavigationContainer>
     </VideoProvider>
   );
@@ -78,6 +79,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  scrollContainer: {
+    flexGrow: 1, // Allows the ScrollView to expand
   },
   nav: {
     position: 'absolute',

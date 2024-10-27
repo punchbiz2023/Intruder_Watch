@@ -6,6 +6,16 @@ import firebase_admin
 from firebase_admin import auth
 from app.auth import generate_token, decode_token
 from app.upload import upload_bp  # Import the upload blueprint
+from pymongo import MongoClient
+
+from bson import ObjectId
+
+
+
+client = MongoClient('mongodb://localhost:27017/')
+db = client['intruder_database']
+collection = db['intruders']
+
 
 def create_app():
     app = Flask(__name__)
@@ -56,5 +66,24 @@ def create_app():
             return jsonify({"message": "Access granted", "user_id": decoded['user_id']}), 200
         except Exception as e:
             return jsonify({"error": str(e)}), 403
+        
+    def convert_objectid(obj):
+        if isinstance(obj, ObjectId):
+            return str(obj)
+        if isinstance(obj, dict):
+            return {k: convert_objectid(v) for k, v in obj.items()}
+        if isinstance(obj, list):
+            return [convert_objectid(i) for i in obj]
+        return obj
+
+    @app.route("/intruders", methods=['POST','GET'])
+    def intruders_extract():
+            # Retrieve all documents from the 'intruder' collection
+        intruders = list(collection.find({}))  # Convert the MongoDB cursor to a list
+        
+        # Convert ObjectId to string
+        intruders = convert_objectid(intruders)
+
+        return jsonify(intruders), 200 
 
     return app

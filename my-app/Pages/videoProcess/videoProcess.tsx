@@ -8,6 +8,7 @@ import {
   Easing,
   ActivityIndicator
 } from "react-native";
+import WatchPage from "../WatchPage/WatchPage";
 import { SVG, Polygon, Rect, Path } from "react-native-svg";
 import { Video } from "expo-av";
 import { VideoContext } from "@/Context/videoProvider";
@@ -17,7 +18,6 @@ import { IoTriangleOutline } from "react-icons/io5";
 import { FaPencilAlt } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { useNavigation } from "@react-navigation/native";
-import WatchPage from "../WatchPage/WatchPage";
 import { opacity } from "react-native-reanimated/lib/typescript/reanimated2/Colors";
 
 const { width, height } = Dimensions.get("window");
@@ -34,6 +34,7 @@ const VideoProcess = () => {
   const [redoStack, setRedoStack] = useState([]);
   const [selectedShapeIndex, setSelectedShapeIndex] = useState(null);
   const [videoSendForProcessing, setvideoSendForProcessing] = useState(false);
+  const [watchPageShow,setshowWatchPage]=useState(false); 
 
   const handleMouseDown = (e) => {
     const svgRect = svgRef.current.getBoundingClientRect();
@@ -180,7 +181,8 @@ const VideoProcess = () => {
               response.json();
             })
             .then((result) => {
-              navigation.navigate("WatchPage");
+              // navigation.navigate("WatchPage");
+              setshowWatchPage(true);
               console.log("Upload successful:", result);
             })
             .catch((error) => {
@@ -321,6 +323,9 @@ const VideoProcess = () => {
           </div>
         </div>
       </div>
+      {
+        watchPageShow ? <><WatchPage/></>:null
+      }
     </>
   );
 };

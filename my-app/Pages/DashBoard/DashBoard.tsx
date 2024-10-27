@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     marginHorizontal:20,
     height: 150,
     borderRadius: 20,
-    overflow: 'hidden',
+    // overflow: 'hidden',
   },
   gradientBackground: {
     flex: 1,

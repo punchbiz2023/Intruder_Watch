@@ -111,7 +111,7 @@ def upload_files():
     cap.release()
     out.release()
     logger.info("Released video capture and writer objects.")
-    detector = PersonDetection(videoPath="/home/jenesha/Downloads/Intruder_Watch-master/Backend/uploads/processed_video.mp4")
+    detector = PersonDetection(videoPath="C:/Users/k.sakthi adhavan/Jenesha_code/Intruder_Detection/Backend/uploads/processed_video.mp4")
     detector()
     return jsonify({
         'message': 'Files uploaded and processed successfully',
